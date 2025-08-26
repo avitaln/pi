@@ -15,7 +15,7 @@
 * 11:00 – **Musee d'Orsay** 2-3 hours
 
 ### Afternoon
-* 13:30 - Records - Rue des Écoles
+* 13:30 - **Crocodisc** Records - 42 Rue des Écoles
 * 14:30 – **Shakespeare & Company**, 37 Rue de la Bûcherie, 75005 (10:00-20:00)
 * 15:30 – **Latin Quarter exploration** - Rue Mouffetard + Place de la Contrescarpe
 * 16:30 – Walk along **Boulevard Saint-Germain**
@@ -65,7 +65,7 @@
 * 09:00 - **La palette** 
 * 10:30 – **Sacré-Cœur**, 35 Rue du Chevalier-de-la-Barre, 75018 (06:00-22:30)
 * 11:00 - **Montmartre** square
-* 11:30 - Montmartre **Record shop**, 8 Rue Pierre Picard, 75018 (Tue-Sat 11:00-19:00, closed Sun)
+* 11:30 - Montmartre Balade sonores **Record shop**, 8 Rue Pierre Picard, 75018 (open at 11:30)
 
 ### Afternoon
 * 14:00 - **Guerrisol** 8 Bd de Sébastopol, 75004 Paris, France
