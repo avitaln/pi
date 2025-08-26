@@ -6,8 +6,8 @@
 
 ### Afternoon/Evening
 * 18:40 – Landing at CDG
-* 20:30-21:00 – Hotel arrival and check-in
-* 21:00 restaurant Les Fous de l'Île - 33 Rue des Deux Ponts Paris (open until 00:00)
+* 19:00 Hotel arrival and check-in - 20 Rue Saint-Paul, 75004 Paris (Le Marais)
+* 21:00 Dinner Les Fous de l'Île - 33 Rue des Deux Ponts Paris (open until 00:00)
 
 ## Thursday, August 28 – 16th arr (Non Final)
 
@@ -30,7 +30,7 @@
 * 14:00 – **Passage des Panoramas** (2nd arr.) → **Passage Jouffroy** and **Passage Verdeau** (9th arr.)
 * 15:00 – **Rue Montorgueil** + **Episode Vintage**, 12-16 Rue Tiquetonne, 75002
 * 16:00 – patisserie - **Stohrer patisserie** 51 Rue Montorgueil, 75002)
-* 19:30 - restaurant **Au Pied de Fouet** 45 Rue de Babylone, 75007 Paris, France (meny peer) +33147051227
+* 19:30 - Dinner **Au Pied de Fouet** 45 Rue de Babylone, 75007 Paris, France (meny peer) +33147051227
 
 ## Saturday, August 30 – Markets + Canal Saint-Martin + Belleville (Final except restaurants)
 
@@ -54,7 +54,7 @@
 * 12:30 – Lunch 
 
 ### Afternoon
-* 19:30 – restaurant **Bouillon Julien** 16 Rue du Faubourg Saint-Denis, 75010 Paris, France
+* 19:30 – Dinner **Bouillon Julien** 16 Rue du Faubourg Saint-Denis, 75010 Paris, France
 
 ## Monday, September 1 – Birthday 🎉 (Non Final)
 

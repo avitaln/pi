@@ -103,8 +103,10 @@
     <div id="map"></div>
     <div class="info">
         Select a day from the dropdown to see your itinerary locations on the map with numbered markers and detailed tooltips.<br>
-        <span style="color: #87CEEB; font-weight: bold;">● Morning activities</span> | 
-        <span style="color: #FF8C00; font-weight: bold;">● Afternoon/Evening activities</span>
+        <span style="color: #87CEEB; font-weight: bold;">● Morning</span> | 
+        <span style="color: #FF8C00; font-weight: bold;">● Afternoon</span> | 
+        <span style="color: #8B4513; font-weight: bold;">● Evening</span> |
+        <span style="color: #000000; font-weight: bold;">● Dinner</span>
     </div>
 
     <script>
@@ -126,12 +128,12 @@
                 {
                     name: "Hôtel Charles V",
                     coords: [48.8545, 2.3614],
-                    text: "Hotel arrival and check-in - 20 Rue Saint-Paul, 75004 Paris (Le Marais)"
+                    text: "19:00 Hotel arrival and check-in - 20 Rue Saint-Paul, 75004 Paris (Le Marais)"
                 },
                 {
                     name: "Les Fous de l'Île",
                     coords: [48.8519, 2.3559],
-                    text: "21:00 restaurant Les Fous de l'Île - 33 Rue des Deux Ponts Paris (open until 00:00)"
+                    text: "21:00 Dinner Les Fous de l'Île - 33 Rue des Deux Ponts Paris (open until 00:00)"
                 }
             ],
             day2: [
@@ -190,7 +192,7 @@
                 {
                     name: "Au Pied de Fouet",
                     coords: [48.8518, 2.3186],
-                    text: "19:30 - restaurant Au Pied de Fouet 45 Rue de Babylone, 75007 Paris, France"
+                    text: "19:30 - Dinner Au Pied de Fouet 45 Rue de Babylone, 75007 Paris, France"
                 }
             ],
             day4: [
@@ -244,7 +246,7 @@
                 {
                     name: "Bouillon Julien",
                     coords: [48.8710, 2.3552],
-                    text: "19:30 – restaurant Bouillon Julien 16 Rue du Faubourg Saint-Denis, 75010 Paris, France"
+                    text: "19:30 – Dinner Bouillon Julien 16 Rue du Faubourg Saint-Denis, 75010 Paris, France"
                 }
             ],
             day6: [
@@ -342,14 +344,21 @@
 
         // Determine if activity is morning or afternoon based on time in text
         function getActivityColor(text) {
+            // Check for dinner entries first
+            if (text.toLowerCase().includes('dinner')) {
+                return '#000000'; // Black for dinner
+            }
+            
             // Look for time patterns like "09:00", "11:00", "14:00", etc.
             const timeMatch = text.match(/(\d{1,2}):(\d{2})/);
             if (timeMatch) {
                 const hour = parseInt(timeMatch[1]);
                 if (hour < 12) {
                     return '#87CEEB'; // Light blue for morning
+                } else if (hour < 19) {
+                    return '#FF8C00'; // Orange for afternoon
                 } else {
-                    return '#FF8C00'; // Orange for afternoon/evening
+                    return '#8B4513'; // Brown for evening (19+)
                 }
             }
             // Default to orange if no time found (assume afternoon)
