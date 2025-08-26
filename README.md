@@ -107,3 +107,9 @@ Find spot:
 * Bakery: **Du Pain et des Idées**, 34 Rue Yves Toudic, 75010 (07:00-20:00, closed weekends)
 * 09:30 – Coffee at **Noir - Coffee Shop & Torréfacteur**, 63 Rue Saint-Louis en l'Île, 75004 Paris (Almonds milk)
 
+---
+
+## Interactive Map
+
+[View Paris Trip Map](https://avitaln.github.io/pi/map.html)
+
