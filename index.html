@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 0 0 0;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-shrink: 0;
+                padding: 10px;
+                background-color: #f5f5f5;
+            }
+            
+            #map {
+                flex: 1;
+                height: auto;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .info {
+                display: none;
+            }
+        }
+        
+        .info {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <select id="daySelector">
+            <option value="">Select a day...</option>
+            <option value="day1">Wednesday, Aug 27</option>
+            <option value="day2">Thursday, Aug 28</option>
+            <option value="day3">Friday, Aug 29</option>
+            <option value="day4">Saturday, Aug 30</option>
+            <option value="day5">Sunday, Aug 31</option>
+            <option value="day6">Monday, Sep 1</option>
+            <option value="day7">Tuesday, Sep 2</option>
+            <option value="day8">Wednesday, Sep 3</option>
+        </select>
+    </div>
+    <div id="map"></div>
+    <div class="info">
+        Select a day from the dropdown to see your itinerary locations on the map with numbered markers and detailed tooltips.
+    </div>
+
+    <script>
+        // Initialize the map centered on Paris
+        const map = L.map('map').setView([48.8566, 2.3522], 12);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Store current markers
+        let currentMarkers = [];
+
+        // Itinerary data with locations and approximate coordinates
+        const itinerary = {
+            day1: [
+                {
+                    name: "Hôtel Charles V",
+                    coords: [48.8545, 2.3614],
+                    text: "Hotel arrival and check-in - 20 Rue Saint-Paul, 75004 Paris (Le Marais)"
+                },
+                {
+                    name: "Les Fous de l'Île",
+                    coords: [48.8519, 2.3559],
+                    text: "21:00 restaurant Les Fous de l'Île - 33 Rue des Deux Ponts Paris (open until 00:00)"
+                }
+            ],
+            day2: [
+                {
+                    name: "Musée d'Orsay",
+                    coords: [48.8599, 2.3266],
+                    text: "11:00 – Musee d'Orsay 2-3 hours"
+                },
+                {
+                    name: "Records - Rue des Écoles",
+                    coords: [48.8483, 2.3472],
+                    text: "13:30 - Records - Rue des Écoles"
+                },
+                {
+                    name: "Shakespeare & Company",
+                    coords: [48.8522, 2.3472],
+                    text: "14:30 – Shakespeare & Company, 37 Rue de la Bûcherie, 75005 (10:00-20:00)"
+                },
+                {
+                    name: "Boulevard Saint-Germain",
+                    coords: [48.8539, 2.3356],
+                    text: "16:00 – Walk along Boulevard Saint-Germain"
+                },
+                {
+                    name: "Musée & Jardins Albert Kahn",
+                    coords: [48.8367, 2.2267],
+                    text: "14:00 – Musée & Jardins Albert Kahn, 2 Rue du Port, Boulogne-Billancourt (11:00-18:00)"
+                },
+                {
+                    name: "Ha Noi Restaurant",
+                    coords: [48.8566, 2.3410],
+                    text: "19:00 – Dinner: Ha Noi - 72 Quai des Orfèvres, 75001 Paris"
+                }
+            ],
+            day3: [
+                {
+                    name: "Fondation Louis Vuitton",
+                    coords: [48.8769, 2.2646],
+                    text: "10:30 – Fondation Louis Vuitton – David Hockney, 8 Av. du Mahatma Gandhi, 75116 (10:00-20:00, Friday until 23:00)"
+                },
+                {
+                    name: "Passage des Panoramas",
+                    coords: [48.8715, 2.3403],
+                    text: "14:00 – Passage des Panoramas (2nd arr.) → Passage Jouffroy and Passage Verdeau (9th arr.)"
+                },
+                {
+                    name: "Rue Montorgueil",
+                    coords: [48.8644, 2.3467],
+                    text: "15:00 – Rue Montorgueil + Episode Vintage, 12-16 Rue Tiquetonne, 75002"
+                },
+                {
+                    name: "Stohrer Patisserie",
+                    coords: [48.8644, 2.3467],
+                    text: "16:00 – patisserie - Stohrer patisserie 51 Rue Montorgueil, 75002"
+                },
+                {
+                    name: "Au Pied de Fouet",
+                    coords: [48.8518, 2.3186],
+                    text: "19:30 - restaurant Au Pied de Fouet 45 Rue de Babylone, 75007 Paris, France"
+                }
+            ],
+            day4: [
+                {
+                    name: "Marché aux Puces de Vanves",
+                    coords: [48.8283, 2.2945],
+                    text: "09:30 – Marché aux Puces de Vanves, Av. Georges Lafenestre, 75014 (Sat-Sun 07:00-14:00)"
+                },
+                {
+                    name: "Marche du livre + Park George Brassens",
+                    coords: [48.8358, 2.3014],
+                    text: "12:00 - Marche du livre (until 18:00) + Park George Brassens"
+                },
+                {
+                    name: "Mama Restaurant Paris West",
+                    coords: [48.8358, 2.3014],
+                    text: "13:00 - restaurant (Mama Restaurant Paris West)"
+                },
+                {
+                    name: "Thanx God I'm a V.I.P.",
+                    coords: [48.8705, 2.3642],
+                    text: "16:00 - Vintage Clothing Thanx God I'm a V.I.P., 12 Rue de Lancry, 75010 (Tue-Sat 11:00-19:30, closed Sun)"
+                },
+                {
+                    name: "Canal Saint-Martin",
+                    coords: [48.8705, 2.3642],
+                    text: "16:30 – Canal Saint-Martin"
+                },
+                {
+                    name: "House of 3 Brothers",
+                    coords: [48.8705, 2.3642],
+                    text: "17:00 - Patisserie House of 3 Brothers, 57 Rue de Lancry, 75010"
+                },
+                {
+                    name: "Galerie Mémoire de l'Avenir",
+                    coords: [48.8735, 2.3836],
+                    text: "18:00 – Galerie Mémoire de l'Avenir, 45/47 Rue Ramponeau, 75020 (Wed-Sat 11:00-19:00)"
+                }
+            ],
+            day5: [
+                {
+                    name: "Odette Café",
+                    coords: [48.8508, 2.3472],
+                    text: "09:00 – Coffee at Odette, 77 Rue Galande, 75005 Paris"
+                },
+                {
+                    name: "Jardin du Luxembourg",
+                    coords: [48.8462, 2.3372],
+                    text: "10:00-11:00 Jardin du Luxembourg (75006, 07:30-20:00)"
+                },
+                {
+                    name: "Bouillon Julien",
+                    coords: [48.8710, 2.3552],
+                    text: "19:30 – restaurant Bouillon Julien 16 Rue du Faubourg Saint-Denis, 75010 Paris, France"
+                }
+            ],
+            day6: [
+                {
+                    name: "La Palette",
+                    coords: [48.8550, 2.3350],
+                    text: "09:00 - La palette"
+                },
+                {
+                    name: "Sacré-Cœur",
+                    coords: [48.8867, 2.3431],
+                    text: "10:30 – Sacré-Cœur, 35 Rue du Chevalier-de-la-Barre, 75018 (06:00-22:30)"
+                },
+                {
+                    name: "Montmartre Square",
+                    coords: [48.8867, 2.3431],
+                    text: "11:00 - Montmartre square"
+                },
+                {
+                    name: "Montmartre Record Shop",
+                    coords: [48.8867, 2.3431],
+                    text: "11:30 - Montmartre Record shop, 8 Rue Pierre Picard, 75018 (Tue-Sat 11:00-19:00, closed Sun)"
+                },
+                {
+                    name: "Guerrisol",
+                    coords: [48.8614, 2.3522],
+                    text: "14:00 - Guerrisol 8 Bd de Sébastopol, 75004 Paris, France"
+                },
+                {
+                    name: "Kilo Shop",
+                    coords: [48.8588, 2.3580],
+                    text: "14:15 – Kilo Shop, 69 Rue de la Verrerie, 75004 (11:00-20:00)"
+                },
+                {
+                    name: "Free'P'Star",
+                    coords: [48.8588, 2.3580],
+                    text: "14:30 – Free'P'Star, 61 Rue de la Verrerie, 75004 (11:00-21:00)"
+                }
+            ],
+            day7: [
+                {
+                    name: "Musée de l'Orangerie",
+                    coords: [48.8638, 2.3223],
+                    text: "09:00 – Musée de l'Orangerie, Jardin des Tuileries, Place de la Concorde, 75001 (09:00-18:00, closed Wed → open on your day)"
+                },
+                {
+                    name: "Restaurant Parcelles",
+                    coords: [48.8630, 2.3614],
+                    text: "12:30 – Restaurant Parcelles, 13 Rue Chapon, 75003 Paris (12:00-14:30, 19:30-22:30)"
+                },
+                {
+                    name: "Place des Vosges",
+                    coords: [48.8555, 2.3658],
+                    text: "15:30 – Place des Vosges + Musée Carnavalet, 23 Rue de Sévigné, 75003 (10:00-18:00, closed Tue)"
+                },
+                {
+                    name: "Record Shop Saint-Sabin",
+                    coords: [48.8589, 2.3703],
+                    text: "16:30 – Record shop, 11 Rue Saint-Sabin, 75011 (Tue-Sat 11:00-19:00, closed Sun)"
+                },
+                {
+                    name: "Passage Vivienne",
+                    coords: [48.8669, 2.3386],
+                    text: "18:30 – Passage Vivienne, 4 Rue des Petits Champs, 75002 + Didier Ludot (Palais Royal, 75001)"
+                }
+            ],
+            day8: [
+                {
+                    name: "Le Peloton Café",
+                    coords: [48.8545, 2.3614],
+                    text: "09:00 – Coffee at Le Peloton Café, 17 Rue du Pont Louis-Philippe, 75004"
+                },
+                {
+                    name: "Île Saint-Louis",
+                    coords: [48.8518, 2.3559],
+                    text: "10:00 – Walk around Île Saint-Louis"
+                },
+                {
+                    name: "Marché aux Fleurs Reine-Elizabeth II",
+                    coords: [48.8556, 2.3465],
+                    text: "11:00 – Marché aux Fleurs Reine-Elizabeth II, Place Louis Lépine, 75004 (Tue-Sat 08:00-19:00)"
+                }
+            ]
+        };
+
+        // Create custom numbered icons
+        function createNumberedIcon(number) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color:#ff6b6b;color:white;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">${number}</div>`,
+                iconSize: [25, 25],
+                iconAnchor: [12, 12]
+            });
+        }
+
+        // Clear current markers
+        function clearMarkers() {
+            currentMarkers.forEach(marker => {
+                map.removeLayer(marker);
+            });
+            currentMarkers = [];
+        }
+
+        // Show locations for selected day
+        function showDayLocations(day) {
+            clearMarkers();
+            
+            if (!day || !itinerary[day]) {
+                return;
+            }
+
+            const locations = itinerary[day];
+            
+            locations.forEach((location, index) => {
+                const marker = L.marker(location.coords, {
+                    icon: createNumberedIcon(index + 1)
+                }).addTo(map);
+                
+                marker.bindPopup(`<b>${index + 1}. ${location.name}</b><br>${location.text}`);
+                currentMarkers.push(marker);
+            });
+
+            // Fit map to show all markers
+            if (locations.length > 0) {
+                const group = new L.featureGroup(currentMarkers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        // Event listener for day selector
+        document.getElementById('daySelector').addEventListener('change', function(e) {
+            showDayLocations(e.target.value);
+        });
+
+        // Initial hotel marker
+        const hotelMarker = L.marker([48.8545, 2.3614], {
+            icon: L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            })
+        }).addTo(map);
+        hotelMarker.bindPopup('<b>🏨 Hôtel Charles V</b><br>Your hotel in Le Marais<br>20 Rue Saint-Paul, 75004 Paris');
+    </script>
+</body>
+</html>
