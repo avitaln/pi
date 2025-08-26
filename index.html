@@ -102,7 +102,9 @@
     </div>
     <div id="map"></div>
     <div class="info">
-        Select a day from the dropdown to see your itinerary locations on the map with numbered markers and detailed tooltips.
+        Select a day from the dropdown to see your itinerary locations on the map with numbered markers and detailed tooltips.<br>
+        <span style="color: #87CEEB; font-weight: bold;">● Morning activities</span> | 
+        <span style="color: #FF8C00; font-weight: bold;">● Afternoon/Evening activities</span>
     </div>
 
     <script>
@@ -329,13 +331,29 @@
         };
 
         // Create custom numbered icons
-        function createNumberedIcon(number) {
+        function createNumberedIcon(number, color = '#ff6b6b') {
             return L.divIcon({
                 className: 'custom-div-icon',
-                html: `<div style="background-color:#ff6b6b;color:white;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">${number}</div>`,
+                html: `<div style="background-color:${color};color:white;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">${number}</div>`,
                 iconSize: [25, 25],
                 iconAnchor: [12, 12]
             });
+        }
+
+        // Determine if activity is morning or afternoon based on time in text
+        function getActivityColor(text) {
+            // Look for time patterns like "09:00", "11:00", "14:00", etc.
+            const timeMatch = text.match(/(\d{1,2}):(\d{2})/);
+            if (timeMatch) {
+                const hour = parseInt(timeMatch[1]);
+                if (hour < 12) {
+                    return '#87CEEB'; // Light blue for morning
+                } else {
+                    return '#FF8C00'; // Orange for afternoon/evening
+                }
+            }
+            // Default to orange if no time found (assume afternoon)
+            return '#FF8C00';
         }
 
         // Clear current markers
@@ -357,8 +375,9 @@
             const locations = itinerary[day];
             
             locations.forEach((location, index) => {
+                const color = getActivityColor(location.text);
                 const marker = L.marker(location.coords, {
-                    icon: createNumberedIcon(index + 1)
+                    icon: createNumberedIcon(index + 1, color)
                 }).addTo(map);
                 
                 marker.bindPopup(`<b>${index + 1}. ${location.name}</b><br>${location.text}`);
