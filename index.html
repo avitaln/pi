@@ -45,20 +45,24 @@
             font-size: 14px;
             border: none;
             border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(4px);
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             min-width: 160px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
         
         select:hover {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.8);
         }
         
         select:focus {
             outline: none;
-            background-color: rgba(255, 255, 255, 1);
+            background-color: rgba(255, 255, 255, 0.85);
             box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
         
